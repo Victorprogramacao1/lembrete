@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lembrete Avançado</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&amp;family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --background-color: #101418;
+      --surface-color: #1a222b;
+      --text-color: #f5f1e8;
+      --primary-action-color: #f97316;
+      --secondary-action-color: #22c55e;
+      --base-font-size: 16px;
+      --title-font: "DM Serif Display", Georgia, serif;
+      --body-font: "Manrope", "Segoe UI", sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(249, 115, 22, 0.12), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(34, 197, 94, 0.10), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(245, 158, 11, 0.08), transparent 35%),
+        var(--background-color);
+      color: var(--text-color);
+      font-family: var(--body-font);
+      font-size: var(--base-font-size);
+    }
+
+    .glass-panel {
+      background: color-mix(in srgb, var(--surface-color) 86%, transparent);
+      border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-glow {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-glow::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        conic-gradient(from 120deg, transparent, rgba(249,115,22,0.18), transparent, rgba(34,197,94,0.14), transparent);
+      filter: blur(26px);
+      animation: slowSpin 18s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes slowSpin {
+      from { transform: rotate(0deg) scale(1); }
+      to { transform: rotate(360deg) scale(1); }
+    }
+
+    .reveal-up {
+      animation: revealUp 0.7s ease forwards;
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    @keyframes revealUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .important-ring {
+      box-shadow:
+        0 0 0 1px rgba(249,115,22,0.35),
+        0 0 0 6px rgba(249,115,22,0.08),
+        inset 0 0 0 1px rgba(249,115,22,0.18);
+      animation: pulseWarm 2.2s ease-in-out infinite;
+    }
+
+    @keyframes pulseWarm {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-1px); box-shadow: 0 0 0 1px rgba(249,115,22,0.55), 0 0 0 10px rgba(249,115,22,0.06), inset 0 0 0 1px rgba(249,115,22,0.22); }
+    }
+
+    .card-enter {
+      animation: cardEnter 0.45s ease forwards;
+    }
+
+    @keyframes cardEnter {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .done-card {
+      opacity: 0.65;
+      filter: saturate(0.7);
+    }
+
+    .focus-visible-ring:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-action-color) 45%, white 0%);
+    }
+
+    .tiny-grid {
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .sr-only-live {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto tiny-grid">
+   <header class="w-full px-4 sm:px-6 pt-6 sm:pt-8">
+    <div class="max-w-6xl mx-auto">
+     <div class="glass-panel hero-glow rounded-[28px] px-5 sm:px-8 py-6 sm:py-8 relative isolate reveal-up">
+      <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+       <div class="max-w-2xl">
+        <p class="uppercase tracking-[0.3em] text-xs sm:text-sm opacity-70 mb-3">Sistema de lembretes</p>
+        <h1 id="app-title" class="leading-none mb-3" style="font-family: var(--title-font); font-size: calc(var(--base-font-size) * 2.35);">Lembrete Avançado</h1>
+        <p id="app-subtitle" class="opacity-80 max-w-xl" style="font-size: calc(var(--base-font-size) * 1);">Escreva suas tarefas, marque as importantes e receba um aviso com som a cada 3 horas perguntando se ela já foi feita.</p>
+       </div>
+       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-full lg:min-w-[380px] lg:max-w-[460px]">
+        <div class="glass-panel rounded-2xl px-4 py-3">
+         <div class="text-xs uppercase tracking-[0.2em] opacity-60">
+          Total
+         </div>
+         <div id="count-total" class="font-extrabold mt-1" style="font-size: calc(var(--base-font-size) * 1.5);">
+          0
+         </div>
+        </div>
+        <div class="glass-panel rounded-2xl px-4 py-3">
+         <div class="text-xs uppercase tracking-[0.2em] opacity-60">
+          Pendentes
+         </div>
+         <div id="count-pending" class="font-extrabold mt-1" style="font-size: calc(var(--base-font-size) * 1.5);">
+          0
+         </div>
+        </div>
+        <div class="glass-panel rounded-2xl px-4 py-3">
+         <div class="text-xs uppercase tracking-[0.2em] opacity-60">
+          Importantes
+         </div>
+         <div id="count-important" class="font-extrabold mt-1" style="font-size: calc(var(--base-font-size) * 1.5);">
+          0
+         </div>
+        </div>
+        <div class="glass-panel rounded-2xl px-4 py-3">
+         <div class="text-xs uppercase tracking-[0.2em] opacity-60">
+          Concluídas
+         </div>
+         <div id="count-done" class="font-extrabold mt-1" style="font-size: calc(var(--base-font-size) * 1.5);">
+          0
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </header>
+   <main class="w-full px-4 sm:px-6 py-6 sm:py-8">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 xl:grid-cols-[1.05fr_0.95fr] gap-6">
+     <section class="glass-panel rounded-[28px] p-5 sm:p-6 reveal-up" style="animation-delay: 0.08s;">
+      <div class="flex items-center gap-3 mb-5">
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background: color-mix(in srgb, var(--primary-action-color) 20%, transparent); color: var(--primary-action-color);"><i data-lucide="sparkles"></i>
+       </div>
+       <div>
+        <h2 class="font-extrabold" style="font-size: calc(var(--base-font-size) * 1.4);">Novo lembrete</h2>
+        <p id="input-label" class="opacity-70" style="font-size: calc(var(--base-font-size) * 0.95);">Escreva o que você precisa fazer.</p>
+       </div>
+      </div>
+      <form id="reminder-form" class="space-y-4" novalidate>
+       <div><label for="reminder-input" class="block mb-2 font-semibold">Seu lembrete</label> <textarea id="reminder-input" class="focus-visible-ring w-full rounded-3xl px-4 py-4 resize-none text-[inherit] leading-relaxed" rows="4" placeholder="Ex.: pagar a conta, estudar, ligar para alguém..." style="background: color-mix(in srgb, var(--surface-color) 92%, black 8%); border: 1px solid color-mix(in srgb, var(--text-color) 14%, transparent); color: var(--text-color);"></textarea>
+       </div>
+       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"><label class="inline-flex items-center gap-3 rounded-2xl px-4 py-3 cursor-pointer select-none" style="background: color-mix(in srgb, var(--surface-color) 78%, black 22%); border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);"> <input id="important-toggle" type="checkbox" class="accent-orange-500 w-5 h-5 focus-visible-ring"> <span id="important-label" class="font-semibold">Marcar como importante</span> </label> <button id="add-button" type="submit" class="focus-visible-ring inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 font-bold transition-transform duration-200 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed" style="background: var(--primary-action-color); color: #ffffff;"> <span id="add-button-text">Adicionar lembrete</span> <span id="add-spinner" class="hidden w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin"></span> </button>
+       </div>
+       <div id="form-message" class="hidden rounded-2xl px-4 py-3 text-sm"></div>
+      </form>
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+       <div class="rounded-3xl p-4" style="background: color-mix(in srgb, var(--surface-color) 80%, black 20%); border: 1px solid color-mix(in srgb, var(--text-color) 10%, transparent);">
+        <div class="flex items-center gap-2 mb-2 font-bold"><i data-lucide="volume-2"></i> Som dos lembretes
+        </div>
+        <p class="opacity-75 mb-3" style="font-size: calc(var(--base-font-size) * 0.9);">Para o som funcionar, toque no botão abaixo uma vez.</p><button id="enable-sound" type="button" class="focus-visible-ring rounded-2xl px-4 py-3 font-semibold w-full transition duration-200" style="background: var(--secondary-action-color); color: #ffffff;"> Ativar som </button>
+       </div>
+       <div class="rounded-3xl p-4" style="background: color-mix(in srgb, var(--surface-color) 80%, black 20%); border: 1px solid color-mix(in srgb, var(--text-color) 10%, transparent);">
+        <div class="flex items-center gap-2 mb-2 font-bold"><i data-lucide="alarm-clock-check"></i> Como funciona
+        </div>
+        <p class="opacity-75" style="font-size: calc(var(--base-font-size) * 0.9);">Lembretes importantes ficam destacados e, a cada 3 horas, o sistema pergunta na tela se a tarefa já foi feita.</p><button id="test-sound" type="button" class="focus-visible-ring mt-3 rounded-2xl px-4 py-3 font-semibold w-full transition duration-200" style="background: color-mix(in srgb, var(--surface-color) 65%, var(--text-color) 35%); color: var(--text-color); border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);"> Testar som agora </button>
+       </div>
+      </div>
+     </section>
+     <section class="space-y-6 reveal-up" style="animation-delay: 0.14s;">
+      <section id="prompt-panel" class="glass-panel rounded-[28px] p-5 sm:p-6 hidden">
+       <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 important-ring" style="background: color-mix(in srgb, var(--primary-action-color) 18%, transparent); color: var(--primary-action-color);"><i data-lucide="bell-ring"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+         <h2 class="font-extrabold mb-1" style="font-size: calc(var(--base-font-size) * 1.25);">Lembrete importante</h2>
+         <p class="opacity-75 mb-3">Já foi feita esta tarefa?</p>
+         <div id="prompt-task" class="rounded-2xl px-4 py-4 font-semibold leading-relaxed mb-4" style="background: color-mix(in srgb, var(--surface-color) 80%, black 20%); border: 1px solid color-mix(in srgb, var(--primary-action-color) 24%, transparent);">
+         </div>
+         <div class="flex flex-col sm:flex-row gap-3"><button id="prompt-complete" type="button" class="focus-visible-ring rounded-2xl px-4 py-3 font-bold transition duration-200" style="background: var(--secondary-action-color); color: #ffffff;"> Sim, já fiz </button> <button id="prompt-later" type="button" class="focus-visible-ring rounded-2xl px-4 py-3 font-semibold transition duration-200" style="background: color-mix(in srgb, var(--surface-color) 70%, black 30%); color: var(--text-color); border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);"> Ainda não </button>
+         </div>
+        </div>
+       </div>
+      </section>
+      <section class="glass-panel rounded-[28px] p-5 sm:p-6">
+       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+        <div>
+         <h2 class="font-extrabold" style="font-size: calc(var(--base-font-size) * 1.45);">Seus lembretes</h2>
+         <p class="opacity-70" style="font-size: calc(var(--base-font-size) * 0.92);">Pendentes no topo. Os importantes ficam mais chamativos.</p>
+        </div>
+        <div id="limit-warning" class="hidden rounded-2xl px-4 py-2 text-sm font-semibold" style="background: color-mix(in srgb, var(--primary-action-color) 18%, transparent); color: var(--primary-action-color); border: 1px solid color-mix(in srgb, var(--primary-action-color) 28%, transparent);">
+         Limite de 999 lembretes atingido.
+        </div>
+       </div>
+       <div id="empty-state" class="rounded-[24px] p-8 text-center" style="background: color-mix(in srgb, var(--surface-color) 70%, black 30%); border: 1px dashed color-mix(in srgb, var(--text-color) 16%, transparent);">
+        <div class="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4" style="background: color-mix(in srgb, var(--secondary-action-color) 18%, transparent); color: var(--secondary-action-color);"><i data-lucide="notebook-pen"></i>
+        </div>
+        <h3 class="font-bold mb-2" style="font-size: calc(var(--base-font-size) * 1.18);">Nada por aqui ainda</h3>
+        <p class="opacity-70 max-w-md mx-auto">Adicione seu primeiro lembrete para começar a organizar o que não pode ser esquecido.</p>
+       </div>
+       <div id="reminder-list" class="space-y-4"></div>
+      </section>
+     </section>
+    </div>
+   </main>
+   <footer class="w-full px-4 sm:px-6 pb-6">
+    <div class="max-w-6xl mx-auto">
+     <div class="glass-panel rounded-3xl px-5 py-4 text-center opacity-80">
+      <p id="footer-text">Dica: marque como importante apenas o que realmente precisa chamar sua atenção.</p>
+     </div>
+    </div>
+   </footer>
+   <div id="live-region" class="sr-only-live" aria-live="polite"></div>
+  </div>
+  <script>
+    const THREE_HOURS_MS = 3 * 60 * 60 * 1000;
+
+    const defaultConfig = {
+      background_color: "#101418",
+      surface_color: "#1a222b",
+      text_color: "#f5f1e8",
+      primary_action_color: "#f97316",
+      secondary_action_color: "#22c55e",
+      font_family: "Manrope",
+      font_size: 16,
+      app_title: "Lembrete Avançado",
+      app_subtitle: "Escreva suas tarefas, marque as importantes e receba um aviso com som a cada 3 horas perguntando se ela já foi feita.",
+      input_label: "Escreva o que você precisa fazer.",
+      add_button_text: "Adicionar lembrete",
+      important_label: "Marcar como importante",
+      footer_text: "Dica: marque como importante apenas o que realmente precisa chamar sua atenção."
+    };
+
+    const state = {
+      reminders: [],
+      reminderMap: new Map(),
+      deletingIds: new Set(),
+      togglingIds: new Set(),
+      creating: false,
+      currentPromptId: null,
+      dismissedBuckets: new Map(),
+      audioEnabled: false,
+      audioContext: null,
+      ringingOscillators: [],
+      ringingActive: false
+    };
+
+    const els = {
+      appRoot: document.getElementById("app"),
+      appTitle: document.getElementById("app-title"),
+      appSubtitle: document.getElementById("app-subtitle"),
+      inputLabel: document.getElementById("input-label"),
+      addButtonText: document.getElementById("add-button-text"),
+      importantLabel: document.getElementById("important-label"),
+      footerText: document.getElementById("footer-text"),
+      form: document.getElementById("reminder-form"),
+      input: document.getElementById("reminder-input"),
+      importantToggle: document.getElementById("important-toggle"),
+      addButton: document.getElementById("add-button"),
+      addSpinner: document.getElementById("add-spinner"),
+      formMessage: document.getElementById("form-message"),
+      enableSound: document.getElementById("enable-sound"),
+      testSound: document.getElementById("test-sound"),
+      reminderList: document.getElementById("reminder-list"),
+      emptyState: document.getElementById("empty-state"),
+      promptPanel: document.getElementById("prompt-panel"),
+      promptTask: document.getElementById("prompt-task"),
+      promptComplete: document.getElementById("prompt-complete"),
+      promptLater: document.getElementById("prompt-later"),
+      countTotal: document.getElementById("count-total"),
+      countPending: document.getElementById("count-pending"),
+      countImportant: document.getElementById("count-important"),
+      countDone: document.getElementById("count-done"),
+      liveRegion: document.getElementById("live-region"),
+      limitWarning: document.getElementById("limit-warning")
+    };
+
+    function announce(message) {
+      els.liveRegion.textContent = "";
+      setTimeout(() => {
+        els.liveRegion.textContent = message;
+      }, 30);
+    }
+
+    function showFormMessage(message, type) {
+      els.formMessage.textContent = message;
+      els.formMessage.classList.remove("hidden");
+      if (type === "error") {
+        els.formMessage.style.background = "color-mix(in srgb, var(--primary-action-color) 14%, transparent)";
+        els.formMessage.style.color = "var(--primary-action-color)";
+        els.formMessage.style.border = "1px solid color-mix(in srgb, var(--primary-action-color) 26%, transparent)";
+      } else {
+        els.formMessage.style.background = "color-mix(in srgb, var(--secondary-action-color) 14%, transparent)";
+        els.formMessage.style.color = "var(--secondary-action-color)";
+        els.formMessage.style.border = "1px solid color-mix(in srgb, var(--secondary-action-color) 24%, transparent)";
+      }
+    }
+
+    function hideFormMessage() {
+      els.formMessage.classList.add("hidden");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(iso) {
+      const date = new Date(iso);
+      return date.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function updateCounts() {
+      const total = state.reminders.length;
+      const pending = state.reminders.filter(item => !item.completed).length;
+      const important = state.reminders.filter(item => item.important && !item.completed).length;
+      const done = state.reminders.filter(item => item.completed).length;
+
+      els.countTotal.textContent = total;
+      els.countPending.textContent = pending;
+      els.countImportant.textContent = important;
+      els.countDone.textContent = done;
+      els.emptyState.style.display = total === 0 ? "block" : "none";
+      els.limitWarning.classList.toggle("hidden", total < 999);
+    }
+
+    function setCreateLoading(loading) {
+      state.creating = loading;
+      els.addButton.disabled = loading;
+      els.addSpinner.classList.toggle("hidden", !loading);
+      els.input.disabled = loading;
+      els.importantToggle.disabled = loading;
+    }
+
+    function ensureAudioContext() {
+      if (!state.audioContext) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) {
+          state.audioContext = new AudioCtx();
+        }
+      }
+      return state.audioContext;
+    }
+
+    async function enableSound() {
+      const ctx = ensureAudioContext();
+      if (!ctx) {
+        showFormMessage("Seu navegador não conseguiu ativar o som aqui.", "error");
+        return;
+      }
+      if (ctx.state === "suspended") {
+        await ctx.resume();
+      }
+      state.audioEnabled = true;
+      els.enableSound.textContent = "Som ativado";
+      els.enableSound.disabled = true;
+      els.enableSound.style.opacity = "0.75";
+      announce("Som dos lembretes ativado.");
+    }
+
+    function stopPhoneRing() {
+      state.ringingOscillators.forEach(osc => {
+        try {
+          osc.stop();
+          osc.disconnect();
+        } catch (e) {}
+      });
+      state.ringingOscillators = [];
+      state.ringingActive = false;
+    }
+
+    function playReminderSound() {
+      if (!state.audioEnabled) return;
+      const ctx = ensureAudioContext();
+      if (!ctx) return;
+
+      stopPhoneRing();
+      state.ringingActive = true;
+
+      const startTime = ctx.currentTime;
+      const ringDuration = 3;
+      const patternDuration = 0.6;
+      const pauseDuration = 0.3;
+      const tonePerPattern = 0.3;
+
+      const freq1 = 480;
+      const freq2 = 440;
+
+      let timeOffset = startTime;
+      const endTime = startTime + ringDuration;
+
+      while (timeOffset < endTime) {
+        const gainNode = ctx.createGain();
+        gainNode.connect(ctx.destination);
+
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+
+        osc1.type = "sine";
+        osc2.type = "sine";
+        osc1.frequency.value = freq1;
+        osc2.frequency.value = freq2;
+
+        gainNode.gain.setValueAtTime(0, timeOffset);
+        gainNode.gain.linearRampToValueAtTime(0.12, timeOffset + 0.02);
+        gainNode.gain.setValueAtTime(0.12, timeOffset + tonePerPattern - 0.05);
+        gainNode.gain.linearRampToValueAtTime(0, timeOffset + tonePerPattern);
+
+        osc1.connect(gainNode);
+        osc2.connect(gainNode);
+
+        osc1.start(timeOffset);
+        osc2.start(timeOffset);
+        osc1.stop(timeOffset + tonePerPattern);
+        osc2.stop(timeOffset + tonePerPattern);
+
+        state.ringingOscillators.push(osc1, osc2);
+
+        timeOffset += patternDuration + pauseDuration;
+      }
+
+      setTimeout(() => {
+        stopPhoneRing();
+      }, (ringDuration + 0.1) * 1000);
+    }
+
+    function sortReminders(data) {
+      return [...data].sort((a, b) => {
+        if (a.completed !== b.completed) return a.completed ? 1 : -1;
+        if (a.important !== b.important) return a.important ? -1 : 1;
+        return new Date(b.created_at) - new Date(a.created_at);
+      });
+    }
+
+    function createReminderElement(item) {
+      const article = document.createElement("article");
+      article.dataset.backendId = item.__backendId;
+      article.className = "card-enter rounded-[24px] p-4 sm:p-5 transition duration-300";
+      article.style.background = "color-mix(in srgb, var(--surface-color) 78%, black 22%)";
+      article.style.border = "1px solid color-mix(in srgb, var(--text-color) 10%, transparent)";
+      article.innerHTML = `
+        <div class="flex gap-4">
+          <button type="button" aria-label="Marcar como concluído" class="toggle-btn focus-visible-ring mt-1 w-11 h-11 rounded-2xl shrink-0 flex items-center justify-center transition duration-200"></button>
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-center gap-2 mb-2">
+                  <span class="status-dot"></span>
+                  <span class="tag-important hidden rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.2em]"></span>
+                  <span class="tag-done hidden rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.2em]"></span>
+                </div>
+                <p class="task-text leading-relaxed break-words font-semibold"></p>
+              </div>
+              <button type="button" class="delete-btn focus-visible-ring rounded-2xl px-4 py-2 font-semibold shrink-0 transition duration-200">
+                Apagar
+              </button>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3 mt-4">
+              <div class="text-xs opacity-65 created-text"></div>
+              <div class="text-xs opacity-75 reminder-note"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      article.querySelector(".toggle-btn").addEventListener("click", () => toggleCompleted(item.__backendId));
+      article.querySelector(".delete-btn").addEventListener("click", () => deleteReminder(item.__backendId));
+
+      return article;
+    }
+
+    function updateReminderElement(article, item) {
+      article.dataset.backendId = item.__backendId;
+      article.classList.toggle("important-ring", item.important && !item.completed);
+      article.classList.toggle("done-card", item.completed);
+
+      const toggleBtn = article.querySelector(".toggle-btn");
+      const taskText = article.querySelector(".task-text");
+      const createdText = article.querySelector(".created-text");
+      const reminderNote = article.querySelector(".reminder-note");
+      const statusDot = article.querySelector(".status-dot");
+      const tagImportant = article.querySelector(".tag-important");
+      const tagDone = article.querySelector(".tag-done");
+      const deleteBtn = article.querySelector(".delete-btn");
+
+      toggleBtn.disabled = state.togglingIds.has(item.__backendId);
+      deleteBtn.disabled = state.deletingIds.has(item.__backendId);
+
+      taskText.textContent = item.title;
+      createdText.textContent = "Criado em " + formatDate(item.created_at);
+      reminderNote.textContent = item.important && !item.completed
+        ? "Vai perguntar novamente a cada 3 horas"
+        : item.completed
+          ? "Tarefa concluída"
+          : "Lembrete normal";
+
+      statusDot.style.background = item.completed
+        ? "var(--secondary-action-color)"
+        : item.important
+          ? "var(--primary-action-color)"
+          : "var(--text-color)";
+
+      tagImportant.classList.toggle("hidden", !item.important || item.completed);
+      tagImportant.textContent = "Importante";
+      tagImportant.style.background = "color-mix(in srgb, var(--primary-action-color) 16%, transparent)";
+      tagImportant.style.color = "var(--primary-action-color)";
+
+      tagDone.classList.toggle("hidden", !item.completed);
+      tagDone.textContent = "Concluído";
+      tagDone.style.background = "color-mix(in srgb, var(--secondary-action-color) 16%, transparent)";
+      tagDone.style.color = "var(--secondary-action-color)";
+
+      toggleBtn.style.background = item.completed
+        ? "var(--secondary-action-color)"
+        : "color-mix(in srgb, var(--surface-color) 58%, black 42%)";
+      toggleBtn.style.color = item.completed ? "#ffffff" : "var(--text-color)";
+      toggleBtn.style.border = item.completed
+        ? "1px solid transparent"
+        : "1px solid color-mix(in srgb, var(--text-color) 12%, transparent)";
+      toggleBtn.innerHTML = item.completed
+        ? '<i data-lucide="check"></i>'
+        : '<i data-lucide="circle"></i>';
+
+      deleteBtn.style.background = "color-mix(in srgb, var(--surface-color) 60%, black 40%)";
+      deleteBtn.style.color = "var(--text-color)";
+      deleteBtn.style.border = "1px solid color-mix(in srgb, var(--text-color) 12%, transparent)";
+      deleteBtn.textContent = state.deletingIds.has(item.__backendId) ? "Apagando..." : "Apagar";
+
+      lucide.createIcons({
+        attrs: {
+          width: 18,
+          height: 18
+        }
+      });
+    }
+
+    function renderReminderList(data) {
+      const sorted = sortReminders(data);
+      state.reminders = sorted;
+      state.reminderMap = new Map(sorted.map(item => [item.__backendId, item]));
+
+      const existing = new Map(
+        Array.from(els.reminderList.children).map(child => [child.dataset.backendId, child])
+      );
+
+      sorted.forEach(item => {
+        if (existing.has(item.__backendId)) {
+          updateReminderElement(existing.get(item.__backendId), item);
+          existing.delete(item.__backendId);
+        } else {
+          const element = createReminderElement(item);
+          updateReminderElement(element, item);
+          els.reminderList.appendChild(element);
+        }
+      });
+
+      existing.forEach(el => el.remove());
+      updateCounts();
+      checkDuePrompts();
+    }
+
+    function getDuePromptReminder() {
+      const now = Date.now();
+
+      for (const item of state.reminders) {
+        if (!item.important || item.completed) continue;
+
+        const createdAt = new Date(item.created_at).getTime();
+        const bucket = Math.floor((now - createdAt) / THREE_HOURS_MS);
+
+        if (bucket < 1) continue;
+
+        const dismissedBucket = state.dismissedBuckets.get(item.__backendId);
+        if (dismissedBucket === bucket) continue;
+
+        return { item, bucket };
+      }
+
+      return null;
+    }
+
+    function showPrompt(item, bucket) {
+      state.currentPromptId = item.__backendId;
+      els.promptPanel.classList.remove("hidden");
+      els.promptTask.textContent = item.title;
+      els.promptPanel.dataset.bucket = String(bucket);
+      playReminderSound();
+      announce("Você tem um lembrete importante aguardando resposta.");
+    }
+
+    function hidePrompt() {
+      state.currentPromptId = null;
+      els.promptPanel.classList.add("hidden");
+      els.promptTask.textContent = "";
+      delete els.promptPanel.dataset.bucket;
+    }
+
+    function checkDuePrompts() {
+      const due = getDuePromptReminder();
+      if (!due) {
+        hidePrompt();
+        return;
+      }
+
+      if (state.currentPromptId !== due.item.__backendId) {
+        showPrompt(due.item, due.bucket);
+      }
+    }
+
+    async function toggleCompleted(backendId) {
+      const item = state.reminderMap.get(backendId);
+      if (!item) return;
+
+      state.togglingIds.add(backendId);
+      renderReminderList(state.reminders);
+
+      const result = await window.dataSdk.update({
+        ...item,
+        completed: !item.completed
+      });
+
+      state.togglingIds.delete(backendId);
+
+      if (!result.isOk) {
+        showFormMessage("Não consegui atualizar esse lembrete agora.", "error");
+        renderReminderList(state.reminders);
+        return;
+      }
+
+      if (!item.completed) {
+        announce("Lembrete marcado como concluído.");
+      } else {
+        announce("Lembrete voltou para pendente.");
+      }
+    }
+
+    async function deleteReminder(backendId) {
+      const item = state.reminderMap.get(backendId);
+      if (!item) return;
+
+      state.deletingIds.add(backendId);
+      renderReminderList(state.reminders);
+
+      const result = await window.dataSdk.delete(item);
+
+      state.deletingIds.delete(backendId);
+
+      if (!result.isOk) {
+        showFormMessage("Não consegui apagar esse lembrete agora.", "error");
+        renderReminderList(state.reminders);
+        return;
+      }
+
+      state.dismissedBuckets.delete(backendId);
+      if (state.currentPromptId === backendId) {
+        hidePrompt();
+      }
+      announce("Lembrete apagado.");
+    }
+
+    els.form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      hideFormMessage();
+
+      const title = els.input.value.trim();
+      const important = els.importantToggle.checked;
+
+      if (!title) {
+        showFormMessage("Escreva um lembrete antes de adicionar.", "error");
+        return;
+      }
+
+      if (state.reminders.length >= 999) {
+        showFormMessage("Você chegou ao limite de 999 lembretes. Apague alguns para continuar.", "error");
+        return;
+      }
+
+      setCreateLoading(true);
+
+      const result = await window.dataSdk.create({
+        title,
+        important,
+        completed: false,
+        created_at: new Date().toISOString()
+      });
+
+      setCreateLoading(false);
+
+      if (!result.isOk) {
+        showFormMessage("Não consegui salvar seu lembrete agora.", "error");
+        return;
+      }
+
+      els.input.value = "";
+      els.importantToggle.checked = false;
+      showFormMessage(important ? "Lembrete importante adicionado." : "Lembrete adicionado.", "success");
+      announce("Novo lembrete adicionado.");
+    });
+
+    els.enableSound.addEventListener("click", async () => {
+      try {
+        await enableSound();
+      } catch {
+        showFormMessage("Não foi possível ativar o som agora.", "error");
+      }
+    });
+
+    els.testSound.addEventListener("click", async () => {
+      try {
+        if (!state.audioEnabled) {
+          await enableSound();
+        }
+        playReminderSound();
+        announce("Som testado.");
+      } catch {
+        showFormMessage("Não foi possível tocar o som agora.", "error");
+      }
+    });
+
+    els.promptComplete.addEventListener("click", async () => {
+      if (!state.currentPromptId) return;
+      await toggleCompleted(state.currentPromptId);
+      hidePrompt();
+    });
+
+    els.promptLater.addEventListener("click", () => {
+      const currentId = state.currentPromptId;
+      if (!currentId) return;
+      const bucket = Number(els.promptPanel.dataset.bucket || "0");
+      state.dismissedBuckets.set(currentId, bucket);
+      stopPhoneRing();
+      hidePrompt();
+      announce("Tudo bem. Vou perguntar novamente depois.");
+    });
+
+    const dataHandler = {
+      onDataChanged(data) {
+        renderReminderList(data);
+      }
+    };
+
+    function applyConfig(config) {
+      const current = {
+        ...defaultConfig,
+        ...config
+      };
+
+      document.documentElement.style.setProperty("--background-color", current.background_color);
+      document.documentElement.style.setProperty("--surface-color", current.surface_color);
+      document.documentElement.style.setProperty("--text-color", current.text_color);
+      document.documentElement.style.setProperty("--primary-action-color", current.primary_action_color);
+      document.documentElement.style.setProperty("--secondary-action-color", current.secondary_action_color);
+      document.documentElement.style.setProperty("--base-font-size", current.font_size + "px");
+      document.documentElement.style.setProperty("--body-font", `${current.font_family}, "Manrope", "Segoe UI", sans-serif`);
+      document.documentElement.style.setProperty("--title-font", `${current.font_family}, "DM Serif Display", Georgia, serif`);
+
+      els.appTitle.textContent = current.app_title;
+      els.appSubtitle.textContent = current.app_subtitle;
+      els.inputLabel.textContent = current.input_label;
+      els.addButtonText.textContent = current.add_button_text;
+      els.importantLabel.textContent = current.important_label;
+      els.footerText.textContent = current.footer_text;
+
+      els.appTitle.style.color = current.text_color;
+      els.appSubtitle.style.color = current.text_color;
+      els.footerText.style.color = current.text_color;
+      els.enableSound.style.background = current.secondary_action_color;
+      els.addButton.style.background = current.primary_action_color;
+      els.promptComplete.style.background = current.secondary_action_color;
+
+      const allTextTargets = [
+        els.appTitle,
+        els.appSubtitle,
+        els.inputLabel,
+        els.addButtonText,
+        els.importantLabel,
+        els.footerText,
+        els.countTotal,
+        els.countPending,
+        els.countImportant,
+        els.countDone
+      ];
+
+      allTextTargets.forEach(el => {
+        el.style.fontFamily = `${current.font_family}, "Manrope", "Segoe UI", sans-serif`;
+      });
+
+      els.appTitle.style.fontFamily = `${current.font_family}, "DM Serif Display", Georgia, serif`;
+      els.appTitle.style.fontSize = `${current.font_size * 2.35}px`;
+      els.appSubtitle.style.fontSize = `${current.font_size}px`;
+      els.inputLabel.style.fontSize = `${current.font_size * 0.95}px`;
+      els.footerText.style.fontSize = `${current.font_size * 0.9}px`;
+      els.countTotal.style.fontSize = `${current.font_size * 1.5}px`;
+      els.countPending.style.fontSize = `${current.font_size * 1.5}px`;
+      els.countImportant.style.fontSize = `${current.font_size * 1.5}px`;
+      els.countDone.style.fontSize = `${current.font_size * 1.5}px`;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          applyConfig(config);
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => {
+                config.surface_color = value;
+                window.elementSdk.setConfig({ surface_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.primary_action_color || defaultConfig.primary_action_color,
+              set: (value) => {
+                config.primary_action_color = value;
+                window.elementSdk.setConfig({ primary_action_color: value });
+              }
+            },
+            {
+              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+              set: (value) => {
+                config.secondary_action_color = value;
+                window.elementSdk.setConfig({ secondary_action_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["app_title", config.app_title || defaultConfig.app_title],
+          ["app_subtitle", config.app_subtitle || defaultConfig.app_subtitle],
+          ["input_label", config.input_label || defaultConfig.input_label],
+          ["add_button_text", config.add_button_text || defaultConfig.add_button_text],
+          ["important_label", config.important_label || defaultConfig.important_label],
+          ["footer_text", config.footer_text || defaultConfig.footer_text]
+        ])
+      });
+      applyConfig(window.elementSdk.config || defaultConfig);
+    } else {
+      applyConfig(defaultConfig);
+    }
+
+    async function initApp() {
+      const result = await window.dataSdk.init(dataHandler);
+      if (!result.isOk) {
+        showFormMessage("Não consegui abrir seus lembretes persistentes agora.", "error");
+        return;
+      }
+
+      updateCounts();
+      setInterval(checkDuePrompts, 60000);
+      checkDuePrompts();
+    }
+
+    initApp();
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e151cb90560f637',t:'MTc3NDM0OTM5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
