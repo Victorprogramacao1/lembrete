@@ -192,8 +192,7 @@
     <div class="max-w-6xl mx-auto grid grid-cols-1 xl:grid-cols-[1.05fr_0.95fr] gap-6">
      <section class="glass-panel rounded-[28px] p-5 sm:p-6 reveal-up" style="animation-delay: 0.08s;">
       <div class="flex items-center gap-3 mb-5">
-       <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background: color-mix(in srgb, var(--primary-action-color) 20%, transparent); color: var(--primary-action-color);">
-        <i data-lucide="sparkles"></i>
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background: color-mix(in srgb, var(--primary-action-color) 20%, transparent); color: var(--primary-action-color);"><i data-lucide="sparkles"></i>
        </div>
        <div>
         <h2 class="font-extrabold" style="font-size: calc(var(--base-font-size) * 1.4);">Novo lembrete</h2>
@@ -201,24 +200,20 @@
        </div>
       </div>
       <form id="reminder-form" class="space-y-4" novalidate>
-       <div>
-        <label for="reminder-input" class="block mb-2 font-semibold">Seu lembrete</label> <textarea id="reminder-input" class="focus-visible-ring w-full rounded-3xl px-4 py-4 resize-none text-[inherit] leading-relaxed" rows="4" placeholder="Ex.: pagar a conta, estudar, ligar para alguém..." style="background: color-mix(in srgb, var(--surface-color) 92%, black 8%); border: 1px solid color-mix(in srgb, var(--text-color) 14%, transparent); color: var(--text-color);"></textarea>
+       <div><label for="reminder-input" class="block mb-2 font-semibold">Seu lembrete</label> <textarea id="reminder-input" class="focus-visible-ring w-full rounded-3xl px-4 py-4 resize-none text-[inherit] leading-relaxed" rows="4" placeholder="Ex.: pagar a conta, estudar, ligar para alguém..." style="background: color-mix(in srgb, var(--surface-color) 92%, black 8%); border: 1px solid color-mix(in srgb, var(--text-color) 14%, transparent); color: var(--text-color);"></textarea>
        </div>
-       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <label class="inline-flex items-center gap-3 rounded-2xl px-4 py-3 cursor-pointer select-none" style="background: color-mix(in srgb, var(--surface-color) 78%, black 22%); border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);"> <input id="important-toggle" type="checkbox" class="accent-orange-500 w-5 h-5 focus-visible-ring"> <span id="important-label" class="font-semibold">Marcar como importante</span> </label> <button id="add-button" type="submit" class="focus-visible-ring inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 font-bold transition-transform duration-200 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed" style="background: var(--primary-action-color); color: #ffffff;"> <span id="add-button-text">Adicionar lembrete</span> <span id="add-spinner" class="hidden w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin"></span> </button>
+       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"><label class="inline-flex items-center gap-3 rounded-2xl px-4 py-3 cursor-pointer select-none" style="background: color-mix(in srgb, var(--surface-color) 78%, black 22%); border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);"> <input id="important-toggle" type="checkbox" class="accent-orange-500 w-5 h-5 focus-visible-ring"> <span id="important-label" class="font-semibold">Marcar como importante</span> </label> <button id="add-button" type="submit" class="focus-visible-ring inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 font-bold transition-transform duration-200 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed" style="background: var(--primary-action-color); color: #ffffff;"> <span id="add-button-text">Adicionar lembrete</span> <span id="add-spinner" class="hidden w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin"></span> </button>
        </div>
        <div id="form-message" class="hidden rounded-2xl px-4 py-3 text-sm"></div>
       </form>
       <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
        <div class="rounded-3xl p-4" style="background: color-mix(in srgb, var(--surface-color) 80%, black 20%); border: 1px solid color-mix(in srgb, var(--text-color) 10%, transparent);">
-        <div class="flex items-center gap-2 mb-2 font-bold">
-         <i data-lucide="volume-2"></i> Som dos lembretes
+        <div class="flex items-center gap-2 mb-2 font-bold"><i data-lucide="volume-2"></i> Som dos lembretes
         </div>
         <p class="opacity-75 mb-3" style="font-size: calc(var(--base-font-size) * 0.9);">Para o som funcionar, toque no botão abaixo uma vez.</p><button id="enable-sound" type="button" class="focus-visible-ring rounded-2xl px-4 py-3 font-semibold w-full transition duration-200" style="background: var(--secondary-action-color); color: #ffffff;"> Ativar som </button>
        </div>
        <div class="rounded-3xl p-4" style="background: color-mix(in srgb, var(--surface-color) 80%, black 20%); border: 1px solid color-mix(in srgb, var(--text-color) 10%, transparent);">
-        <div class="flex items-center gap-2 mb-2 font-bold">
-         <i data-lucide="alarm-clock-check"></i> Como funciona
+        <div class="flex items-center gap-2 mb-2 font-bold"><i data-lucide="alarm-clock-check"></i> Como funciona
         </div>
         <p class="opacity-75" style="font-size: calc(var(--base-font-size) * 0.9);">Lembretes importantes ficam destacados e, a cada 3 horas, o sistema pergunta na tela se a tarefa já foi feita.</p><button id="test-sound" type="button" class="focus-visible-ring mt-3 rounded-2xl px-4 py-3 font-semibold w-full transition duration-200" style="background: color-mix(in srgb, var(--surface-color) 65%, var(--text-color) 35%); color: var(--text-color); border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);"> Testar som agora </button>
        </div>
@@ -227,16 +222,14 @@
      <section class="space-y-6 reveal-up" style="animation-delay: 0.14s;">
       <section id="prompt-panel" class="glass-panel rounded-[28px] p-5 sm:p-6 hidden">
        <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 important-ring" style="background: color-mix(in srgb, var(--primary-action-color) 18%, transparent); color: var(--primary-action-color);">
-         <i data-lucide="bell-ring"></i>
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 important-ring" style="background: color-mix(in srgb, var(--primary-action-color) 18%, transparent); color: var(--primary-action-color);"><i data-lucide="bell-ring"></i>
         </div>
         <div class="flex-1 min-w-0">
          <h2 class="font-extrabold mb-1" style="font-size: calc(var(--base-font-size) * 1.25);">Lembrete importante</h2>
          <p class="opacity-75 mb-3">Já foi feita esta tarefa?</p>
          <div id="prompt-task" class="rounded-2xl px-4 py-4 font-semibold leading-relaxed mb-4" style="background: color-mix(in srgb, var(--surface-color) 80%, black 20%); border: 1px solid color-mix(in srgb, var(--primary-action-color) 24%, transparent);">
          </div>
-         <div class="flex flex-col sm:flex-row gap-3">
-          <button id="prompt-complete" type="button" class="focus-visible-ring rounded-2xl px-4 py-3 font-bold transition duration-200" style="background: var(--secondary-action-color); color: #ffffff;"> Sim, já fiz </button> <button id="prompt-later" type="button" class="focus-visible-ring rounded-2xl px-4 py-3 font-semibold transition duration-200" style="background: color-mix(in srgb, var(--surface-color) 70%, black 30%); color: var(--text-color); border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);"> Ainda não </button>
+         <div class="flex flex-col sm:flex-row gap-3"><button id="prompt-complete" type="button" class="focus-visible-ring rounded-2xl px-4 py-3 font-bold transition duration-200" style="background: var(--secondary-action-color); color: #ffffff;"> Sim, já fiz </button> <button id="prompt-later" type="button" class="focus-visible-ring rounded-2xl px-4 py-3 font-semibold transition duration-200" style="background: color-mix(in srgb, var(--surface-color) 70%, black 30%); color: var(--text-color); border: 1px solid color-mix(in srgb, var(--text-color) 12%, transparent);"> Ainda não </button>
          </div>
         </div>
        </div>
@@ -252,8 +245,7 @@
         </div>
        </div>
        <div id="empty-state" class="rounded-[24px] p-8 text-center" style="background: color-mix(in srgb, var(--surface-color) 70%, black 30%); border: 1px dashed color-mix(in srgb, var(--text-color) 16%, transparent);">
-        <div class="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4" style="background: color-mix(in srgb, var(--secondary-action-color) 18%, transparent); color: var(--secondary-action-color);">
-         <i data-lucide="notebook-pen"></i>
+        <div class="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4" style="background: color-mix(in srgb, var(--secondary-action-color) 18%, transparent); color: var(--secondary-action-color);"><i data-lucide="notebook-pen"></i>
         </div>
         <h3 class="font-bold mb-2" style="font-size: calc(var(--base-font-size) * 1.18);">Nada por aqui ainda</h3>
         <p class="opacity-70 max-w-md mx-auto">Adicione seu primeiro lembrete para começar a organizar o que não pode ser esquecido.</p>
@@ -969,11 +961,63 @@
       applyConfig(defaultConfig);
     }
 
+    // Versão offline do Data SDK para GitHub Pages
+    const offlineDataSdk = {
+      data: [],
+      
+      async init(handler) {
+        this.data = loadFromLocalStorage();
+        handler.onDataChanged(this.data);
+        return { isOk: true };
+      },
+      
+      async create(record) {
+        try {
+          const item = {
+            ...record,
+            __backendId: Date.now().toString() + Math.random().toString(36).substr(2, 9)
+          };
+          this.data.push(item);
+          saveToLocalStorage(this.data);
+          dataHandler.onDataChanged(this.data);
+          return { isOk: true };
+        } catch (e) {
+          return { isOk: false, error: e };
+        }
+      },
+      
+      async update(record) {
+        try {
+          const index = this.data.findIndex(item => item.__backendId === record.__backendId);
+          if (index !== -1) {
+            this.data[index] = record;
+            saveToLocalStorage(this.data);
+            dataHandler.onDataChanged(this.data);
+          }
+          return { isOk: true };
+        } catch (e) {
+          return { isOk: false, error: e };
+        }
+      },
+      
+      async delete(record) {
+        try {
+          this.data = this.data.filter(item => item.__backendId !== record.__backendId);
+          saveToLocalStorage(this.data);
+          dataHandler.onDataChanged(this.data);
+          return { isOk: true };
+        } catch (e) {
+          return { isOk: false, error: e };
+        }
+      }
+    };
+
     async function initApp() {
-      const result = await window.dataSdk.init(dataHandler);
+      // Usar offline SDK ou Data SDK real conforme disponível
+      const sdk = window.dataSdk || offlineDataSdk;
+      const result = await sdk.init(dataHandler);
       if (!result.isOk) {
-        showFormMessage("Não consegui abrir seus lembretes persistentes agora.", "error");
-        // Carrega do cache do navegador como fallback
+        showFormMessage("Não consegui abrir seus lembretes agora.", "error");
         const cachedReminders = loadFromLocalStorage();
         if (cachedReminders.length > 0) {
           renderReminderList(cachedReminders);
@@ -989,5 +1033,5 @@
     initApp();
     lucide.createIcons();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e15264cd18af61b',t:'MTc3NDM0OTc5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e152a1761b5f61b',t:'MTc3NDM0OTk0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
